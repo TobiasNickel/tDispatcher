@@ -42,7 +42,7 @@ var tDispatcher = (function(){
 	 *	method to remove an eventlistener or even all.
 	 *@param event {string} name of the event where the call back should be removed
 	 *@param callback {function} that will be removed from the listener
-	 */ 
+	 */
 	tDispatcher.prototype.off = function off(event, name) {
 	    //todo: remove a store
 		if (!event) {
