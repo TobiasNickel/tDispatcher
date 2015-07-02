@@ -25,7 +25,14 @@ var tDispatcher = (function(){
 	 *@param event {string} name of the event
 	 *@param callback {function} the function to be called when the event is triggered
 	 */
-	tDispatcher.prototype.on = function on(store) {
+	tDispatcher.prototype.on = function on(store, callback) {
+		if(typeof store == 'string'){
+			store={
+				event:store,
+				name:(Math.random()* 0xFFFFFFFFFFFFF).toString(16)+''+(Math.random()* 0xFFFFFFFFFFFFF).toString(16),
+				callback: callback
+			}
+		}
         // a store has minimum the properties event, name and callback
         //store = {
         //  event: '',
@@ -43,16 +50,26 @@ var tDispatcher = (function(){
 	 *@param event {string} name of the event where the call back should be removed
 	 *@param callback {function} that will be removed from the listener
 	 */
-	tDispatcher.prototype.off = function off(event, name) {
-	    //todo: remove a store
+	tDispatcher.prototype.off = function off(event,/*name or callback*/ name) {
 		if (!event) {
 			this._events = {};
 			return;
 		}
-		if (!callback) {
+		if (!name) {
 			delete this._events[event];
 		} else {
-			delete this._events[event][name];
+			if(this._events[event]){
+				if("function" == typeof name){
+					var events = this._events[event];
+					for(var i in events){
+						if(events[i].callback === name){
+							delete events[i];
+						}
+					}
+				}else{
+					delete this._events[event][name];
+				}
+			}
 		}
 	}
 		/**
@@ -60,13 +77,12 @@ var tDispatcher = (function(){
 	 *@param event {string} name of the event to be triggered
 	 *@args args {mixed} anything that you want to be passed to the listeners callback
 	 */
-	tDispatcher.prototype.trigger = function trigger(action) {
+	tDispatcher.prototype.trigger = function trigger(action,/*optional*/value) {
 		if(typeof action === 'string')
 			action = {event:action};
-	    //an action has minimum an event-property:
-	    //action={
-	    //     event    
-	    //}
+		if(value!== undefined)
+			action.value=value;
+			
 		if (!action.event) return;
 		this._actions.push(action)
 		if(this.isDispatching) return;
@@ -131,7 +147,7 @@ dispatcher.on({event:'los',name:'nagut',callback:function(){
 
 dispatcher.trigger({event:'los'});
 
-*/
+/**/
 /*
 // on console you should see
 
