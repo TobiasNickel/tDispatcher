@@ -1,0 +1,25 @@
+{
+  "name": "tdispatcher",
+  "version": "1.0.1",
+  "description": "simple Flux dispatcher, for huge applications",
+  "main": "tDispatcher.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TobiasNickel/tDispatcher.git"
+  },
+  "keywords": [
+    "dispatcher",
+    "flux",
+    "small",
+    "event"
+  ],
+  "author": "Tobias Nickel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TobiasNickel/tDispatcher/issues"
+  },
+  "homepage": "https://github.com/TobiasNickel/tDispatcher#readme"
+}

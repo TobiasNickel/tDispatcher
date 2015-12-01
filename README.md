@@ -13,19 +13,38 @@ As soon as all actions are computed, it will trigger an 'dispatched' event, to l
 
 ## API
 All you need are three methods, maybe just two of them: on, off and trigger.
+```js
+	1. tDispatcher.on();// to register a listener,
+		// it can be used as a in backbone event just .on('eventname',callback)
+		//or better: an object, containing 
+		{	event:'theEventname',
+			name:'nameThatCanBeRequired',
+			callback:function(){'toBeExecuted'},
+			require:['module that is required']
+		}
+	
+	2. tDispatcher.off;// to remove eventlistener. .off(), 
+		//		without params will remove all listener on the Dispatcher
+		.off(event) 
+		//		will remove all listener for that event,(event is a string)
+		.off(event, name) 
+		//		the listener with that name
+		.off(event,callback) 
+		//		will the listener with the corresponding 
+		//		callback (slow search in a loop)
+	
+	3. tDispatcher.trigger() // to execute an event. It will pass the action object to the listeners callback
+		//.trigger(name) 
+		//		call it with a string will execute the listener on that eventname
+		//.trigger(name,value) 
+		//		will pass add the value to the value-key on the action object.
+		//.trigger(action) 
+		//		an object that need to have an event key, as string, 
+		//		describing the event to be executed and all 
+		//		other values on other key names, that you want to 
+		//		pass to the listener.
 
-	1. **on** to register a listener,
-		it can be used as a in backbone event just .on('eventname',callback)
-		or better: an object, containing {event:'theEventname',name:'nameThatCanBeRequired',callback:function(){'toBeExecuted'}}
-	2. **off**. to remove eventlistener. .off(), without params will remove all listener on the Dispatcher
-		.off(event) will remove all listener for that event
-		.off(event, name) the listener with that name
-		.off(event,callback) will the listener with the corresponding callback (slow search in a loop)
-	3. **trigger** to execute an event. It will pass the action object to the listeners callback
-		.trigger(name) call it with a string will execute the listener on that eventname
-		.trigger(name,value) will pass add the value to the value-key on the action object.
-		.trigger(action) an object that need to have an event key, as string, describing the event to be executed and all other values on other key names, that you want to pass to the listener.
-
+```
 ##Developer
 [Tobias Nickel](http://tnickel.de/)  
 ![alt text](https://avatars1.githubusercontent.com/u/4189801?s=150) 

@@ -1,8 +1,3 @@
-// ==ClosureCompiler==
-// @output_file_name default.js
-// @compilation_level SIMPLE_OPTIMIZATIONS
-// ==/ClosureCompiler==
-
 /**
  * @author Tobias Nickel
  * @description minimalistic dispatcher, that fulfill the full requirement of a FLUX dispatcher.
@@ -14,11 +9,12 @@
   * ._events, .on, .off and .trigger
   */
 var tDispatcher = (function(){
-    function tDispatcher(){
+  function tDispatcher(){
 		this._events= {dispatched:[]};
 		this.isDispatching = false;
 		this._actions = [];
-    }
+  }
+
 	/**
 	 *	method that you will want to write in the documentation of your class/object.
 	 *  together with all the events you trigger by yourself
@@ -41,10 +37,13 @@ var tDispatcher = (function(){
         //  callback: the method do call with the action
         //}
 
-		if (!(store.event in this._events))
+		if (!(store.event in this._events)){
 			this._events[store.event] = {};
+    }
 		this._events[store.event][store.name] = store;
-	}
+    this.addAction(store.name);
+	};
+
 	/**
 	 *	method to remove an eventlistener or even all.
 	 *@param event {string} name of the event where the call back should be removed
@@ -71,32 +70,35 @@ var tDispatcher = (function(){
 				}
 			}
 		}
-	}
-		/**
+	};
+
+	/**
 	 *  executing all listener that are registered on the event
 	 *@param event {string} name of the event to be triggered
 	 *@args args {mixed} anything that you want to be passed to the listeners callback
 	 */
 	tDispatcher.prototype.trigger = function trigger(action,/*optional*/value) {
-		if(typeof action === 'string')
+		if(typeof action === 'string'){
 			action = {event:action};
-		if(value!== undefined)
+    }
+		if(value !== undefined){
 			action.value=value;
-			
+    }
 		if (!action.event) return;
-		this._actions.push(action)
+		this._actions.push(action);
 		if(this.isDispatching) return;
 
-        this.isDispatching = true;
-		while(action = this._actions.shift()){	
-            if (!this._events[action.event])
-                continue;
-				
+    this.isDispatching = true;
+		while(action = this._actions.shift()){
+      if (!this._events[action.event]){
+        continue;
+      }
 			var solvedRoundCount = 1;
 			var todoEvents = {};
 			var events = this._events[action.event];
-			for(var i in events)
-				todoEvents[i]=events[i];
+			for(var i in events){
+				todoEvents[i] = events[i];
+      }
 
 			var done = {};
 			while(solvedRoundCount != 0){
@@ -104,7 +106,7 @@ var tDispatcher = (function(){
 				for(var i in todoEvents) {
 					if(todoEvents[i].require){
 						var found=false;
-						for(var r = 0;r<todoEvents[i].require.length;r++){
+						for(var r = 0; r<todoEvents[i].require.length; r++){
 							if(!done[todoEvents[i].require[r]]){
 								found=true;
 								break;
@@ -112,46 +114,35 @@ var tDispatcher = (function(){
 						}
 						if(found)continue;
 					}
-						
+
 					done[i]=true;
 					todoEvents[i].callback(action);
 					delete todoEvents[i];
 					solvedRoundCount++;
 				}
 			}
-        }
+    }
+    var events = this._events["dispatched"];
+    for(var i in events){
+      events[i].callback();
+    }
+    this.isDispatching = false;
+	};
 
+  /**
+   * create a method on the dispatcher, that dispatches the Event of the given name
+   * @param name {string} the name of the Action and the method.
+   */
+  tDispatcher.prototype.addAction = function(name){
+    if(!this[name]){
+      this[name]=function(value){
+        this.trigger('name', value);
+      };
+    }
+  };
 
-        var i = this._events["dispatched"].length;
-        while (i--) {
-            this._events["dispatched"][i](action);
-        }
-        this.isDispatching = false;
-	}
-
-    return tDispatcher
+  return tDispatcher
 })();
 
+if('object' === typeof module){ module.exports=tDispatcher; }
 //test
-/*
-var dispatcher = new tDispatcher();
-
-dispatcher.on({event:'duAuchNoch',name:'nachzügler',callback:function(){console.log('nein mann, ich will noch nicht gehn')}})
-
-dispatcher.on({event:'los',name:'nach her',require:['nagut'],callback:function(){console.log('nachher : nach : machdoch')}});
-
-dispatcher.on({event:'los',name:'nagut',callback:function(){
-    dispatcher.trigger({event:'duAuchNoch'});
-    console.log('machdoch');
-}});
-
-dispatcher.trigger({event:'los'});
-
-/**/
-/*
-// on console you should see
-
-machdoch
-nachher : nach : machdoch
-nein mann, ich will noch nicht gehn
-*/
