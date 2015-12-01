@@ -1,5 +1,6 @@
+
 # tDispatcher
-inspired by Facebooks Flux, I made a simpler dispatcher, with a more common API. 
+Flux-Dispatcher, with common API for huge applications
 
 So this project is for guys who are interested to use Flux and do it in a simple way, that might be familiar with other eventsystems.
 I developed this framework, because I am up to start a new Project, with a lot of complex dataflows between client- and server-application.
@@ -16,35 +17,40 @@ All you need are three methods, maybe just two of them: on, off and trigger.
 ```js
 	1. tDispatcher.on();// to register a listener,
 		// it can be used as a in backbone event just .on('eventname',callback)
-		//or better: an object, containing 
+		//or better: an object, containing
 		{	event:'theEventname',
 			name:'nameThatCanBeRequired',
 			callback:function(){'toBeExecuted'},
 			require:['module that is required']
 		}
-	
-	2. tDispatcher.off;// to remove eventlistener. .off(), 
+
+	2. tDispatcher.off;// to remove eventlistener. .off(),
 		//		without params will remove all listener on the Dispatcher
-		.off(event) 
+		.off(event)
 		//		will remove all listener for that event,(event is a string)
-		.off(event, name) 
+		.off(event, name)
 		//		the listener with that name
-		.off(event,callback) 
-		//		will the listener with the corresponding 
+		.off(event,callback)
+		//		will the listener with the corresponding
 		//		callback (slow search in a loop)
-	
+
 	3. tDispatcher.trigger() // to execute an event. It will pass the action object to the listeners callback
-		//.trigger(name) 
+		//.trigger(name)
 		//		call it with a string will execute the listener on that eventname
-		//.trigger(name,value) 
+		//.trigger(name,value)
 		//		will pass add the value to the value-key on the action object.
-		//.trigger(action) 
-		//		an object that need to have an event key, as string, 
-		//		describing the event to be executed and all 
-		//		other values on other key names, that you want to 
+		//.trigger(action)
+		//		an object that need to have an event key, as string,
+		//		describing the event to be executed and all
+		//		other values on other key names, that you want to
 		//		pass to the listener.
+
+
+	4. tDispatcher.addAction(name)
+		// name is the name of a new function, that will trigger the event of the same name
+
 
 ```
 ##Developer
 [Tobias Nickel](http://tnickel.de/)  
-![alt text](https://avatars1.githubusercontent.com/u/4189801?s=150) 
+![alt text](https://avatars1.githubusercontent.com/u/4189801?s=150)
